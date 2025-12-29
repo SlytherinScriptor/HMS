@@ -1,0 +1,32 @@
+.timeline-item-appointment {
+    border-left: 3px solid #0176d3;
+    /* Salesforce Blue */
+}
+
+.timeline-item-medical {
+    border-left: 3px solid #ba0517;
+    /* Salesforce Red */
+}
+
+.timeline-item-billing {
+    border-left: 3px solid #2e844a;
+    /* Salesforce Green */
+}
+
+.slds-timeline__item_expandable {
+    padding-bottom: 0.75rem;
+    padding-left: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #f3f2f2;
+    border-radius: 0.25rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.slds-timeline__date {
+    font-size: 0.75rem;
+    color: #706e6b;
+    font-weight: bold;
+}

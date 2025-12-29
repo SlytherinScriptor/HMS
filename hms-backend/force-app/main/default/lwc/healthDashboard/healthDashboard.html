@@ -1,0 +1,125 @@
+<template>
+    <div class="dashboard-container slds-grid">
+        <!-- 1. Fixed Vertical Sidebar -->
+        <aside class="sidebar slds-col slds-no-flex">
+            <div class="logo-area slds-p-around_medium">
+                <lightning-icon icon-name="standard:shield" size="large" variant="inverse"></lightning-icon>
+            </div>
+            <nav class="navigation slds-m-top_large">
+                <ul class="slds-list_vertical">
+                    <li class="nav-item active" data-id="dashboard" onclick={handleNav}>
+                        <lightning-icon icon-name="utility:dashboard" size="small" class="nav-icon"></lightning-icon>
+                        Dashboard
+                    </li>
+                    <li class="nav-item" data-id="patients" onclick={handleNav}>
+                        <lightning-icon icon-name="utility:user" size="small" class="nav-icon"></lightning-icon>
+                        Patients
+                    </li>
+                    <li class="nav-item" data-id="appointments" onclick={handleNav}>
+                        <lightning-icon icon-name="utility:event" size="small" class="nav-icon"></lightning-icon>
+                        Appointments
+                    </li>
+                    <li class="nav-item" data-id="doctors" onclick={handleNav}>
+                        <lightning-icon icon-name="utility:adduser" size="small" class="nav-icon"></lightning-icon>
+                        Doctors
+                    </li>
+                    <li class="nav-item" data-id="reports" onclick={handleNav}>
+                        <lightning-icon icon-name="utility:chart" size="small" class="nav-icon"></lightning-icon>
+                        Reports
+                    </li>
+                    <li class="nav-item" data-id="settings" onclick={handleNav}>
+                        <lightning-icon icon-name="utility:settings" size="small" class="nav-icon"></lightning-icon>
+                        Settings
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content slds-col">
+            <!-- 2. Top Header -->
+            <header class="top-header slds-grid slds-grid_align-spread slds-p-horizontal_large slds-p-vertical_medium">
+                <h1 class="page-title text-shadow">Health Management System</h1>
+                <div class="user-profile slds-grid slds-grid_vertical-align-center">
+                    <lightning-button-icon icon-name="utility:refresh" variant="border-filled"
+                        alternative-text="Refresh Data" onclick={handleRefresh} class="slds-m-right_medium"
+                        disabled={isLoading}></lightning-button-icon>
+                    <!-- Reserved for future profile info -->
+                    <lightning-avatar src="" fallback-icon-name="standard:user" variant="circle"
+                        initials="AD"></lightning-avatar>
+                </div>
+            </header>
+
+            <!-- 3. Analytics Card Grid -->
+            <!-- 3. Analytics Card Grid -->
+            <div class="analytics-grid slds-grid slds-wrap slds-p-around_large slds-gutters">
+                <template if:true={isLoading}>
+                    <div class="spinner-container slds-is-relative slds-align_absolute-center slds-size_1-of-1"
+                        style="height: 200px;">
+                        <lightning-spinner alternative-text="Loading statistics..." size="medium"
+                            variant="brand"></lightning-spinner>
+                    </div>
+                </template>
+                <template if:false={isLoading}>
+                    <template for:each={metrics} for:item="metric">
+                        <div key={metric.id}
+                            class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_large">
+                            <div class="metric-card shadow-card" data-id={metric.id} onclick={handleCardClick}>
+                                <div class="card-content slds-grid slds-grid_vertical-align-center">
+                                    <div class="icon-container slds-m-right_medium">
+                                        <lightning-icon icon-name={metric.icon} size="medium"
+                                            variant="inverse"></lightning-icon>
+                                    </div>
+                                    <div class="text-container">
+                                        <h3 class="metric-label">{metric.label}</h3>
+                                        <div class="metric-value">{metric.value}</div>
+                                    </div>
+                                </div>
+                                <div class="card-footer slds-m-top_small">
+                                    <span class={metric.trendClass}>{metric.trend}</span>
+                                    <span class="trend-label slds-m-left_x-small">vs last week</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- Placeholder for detailed content based on navigation -->
+            <!-- Placeholder for detailed content based on navigation -->
+            <div class="content-placeholder slds-p-horizontal_large slds-m-bottom_large">
+                <template if:false={activeChart}>
+                    <div class="glass-panel">
+                        <p class="slds-text-color_inverse-weak">Select a module or metric to view details.</p>
+                    </div>
+                </template>
+                <template if:true={activeChart}>
+                    <div class="glass-panel slds-is-relative" style="min-height: 400px;">
+                        <lightning-button-icon icon-name="utility:close" variant="bare" onclick={handleCloseChart}
+                            class="chart-close-btn slds-float_right slds-m-right_small slds-m-top_small"
+                            alternative-text="Close Chart"></lightning-button-icon>
+
+                        <!-- Dynamic Grid for Multiple Charts -->
+                        <div class="slds-grid slds-wrap slds-gutters slds-p-around_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                                <div class="chart-container" style="height: 300px; width: 100%;">
+                                    <canvas class="chart-1" lwc:dom="manual"></canvas>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                                <div class="chart-container" style="height: 300px; width: 100%;">
+                                    <canvas class="chart-2" lwc:dom="manual"></canvas>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                                <div class="chart-container" style="height: 300px; width: 100%;">
+                                    <canvas class="chart-3" lwc:dom="manual"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </main>
+    </div>
+</template>

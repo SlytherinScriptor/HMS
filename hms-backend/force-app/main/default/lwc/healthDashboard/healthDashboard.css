@@ -1,0 +1,135 @@
+:host {
+    display: block;
+    --sidebar-width: 240px;
+    --dark-bg: #1a1c23;
+    --card-bg: #252833;
+    --sidebar-bg: #12141a;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --accent-color: #3b82f6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+}
+
+.dashboard-container {
+    background-color: var(--dark-bg);
+    min-height: 800px;
+    color: var(--text-primary);
+    font-family: 'Salesforce Sans', sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid #2d3748;
+    height: 100%;
+}
+
+.nav-item {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    border-left-color: var(--accent-color);
+}
+
+.nav-icon {
+    margin-right: 12px;
+    --sds-c-icon-color-foreground-default: var(--text-secondary);
+}
+
+.nav-item.active .nav-icon {
+    --sds-c-icon-color-foreground-default: var(--accent-color);
+}
+
+/* Header */
+.top-header {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid #2d3748;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+/* Cards */
+.metric-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #2d3748;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    border-color: var(--accent-color);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent-color);
+    opacity: 0.5;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+.trend-up {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.trend-down {
+    color: var(--warning-color);
+    /* Using warning for negative/down trends for now */
+    font-weight: 600;
+}
+
+.trend-label {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 1rem;
+    border: 1px dashed #2d3748;
+}

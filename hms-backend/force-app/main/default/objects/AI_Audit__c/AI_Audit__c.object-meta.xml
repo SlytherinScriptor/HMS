@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <label>AI Audit</label>
+    <pluralLabel>AI Audits</pluralLabel>
+    <nameField>
+        <displayFormat>AUDIT-{000000}</displayFormat>
+        <label>Audit ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+
+    <listViews>
+        <fullName>Review_Required</fullName>
+        <columns>NAME</columns>
+        <columns>Appointment__c</columns>
+        <columns>Input_Notes__c</columns>
+        <columns>Output_Specialty__c</columns>
+        <columns>Confidence_Score__c</columns>
+        <columns>Reasoning__c</columns>
+        <columns>Decision_Type__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Decision_Type__c</field>
+            <operation>equals</operation>
+            <value>Review Required,Urgent</value>
+        </filters>
+        <label>Review Required</label>
+    </listViews>
+</CustomObject>

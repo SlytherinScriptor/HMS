@@ -1,0 +1,16 @@
+<template>
+    <div class={cardClass}>
+        <div class="slds-media slds-media_center">
+            <div class="slds-media__figure">
+                <lightning-icon icon-name={iconName} size="large" variant="inverse"></lightning-icon>
+            </div>
+            <div class="slds-media__body slds-text-align_right">
+                <h2 class="slds-text-heading_small slds-text-color_inverse-weak">{title}</h2>
+                <div class="slds-text-heading_large slds-text-color_inverse font-weight-bold">{value}</div>
+                <div class="slds-text-body_small slds-text-color_inverse-weak slds-m-top_xxxx-small">
+                    {trend} since last week
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

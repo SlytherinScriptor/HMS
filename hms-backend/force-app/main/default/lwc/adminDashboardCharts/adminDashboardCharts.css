@@ -1,0 +1,21 @@
+.chart-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-card {
+    background: #1e2430;
+    /* Matches Admin Dashboard Card */
+    border: 1px solid #2d3648;
+    padding: 20px;
+    border-radius: 8px;
+    height: 350px;
+    position: relative;
+}
+
+.chart {
+    width: 100% !important;
+    height: 100% !important;
+}

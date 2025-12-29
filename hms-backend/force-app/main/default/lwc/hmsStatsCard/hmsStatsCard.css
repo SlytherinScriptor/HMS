@@ -1,0 +1,26 @@
+.shadow-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.shadow-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-gradient {
+    color: white;
+}
+
+.gradient-blue {
+    background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+}
+
+.gradient-green {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.gradient-purple {
+    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+}

@@ -1,0 +1,68 @@
+<template>
+    <lightning-card title="Patient Clinical Timeline" icon-name="standard:timesheet">
+        <div class="slds-p-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-theme_error">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{error}</h2>
+                </div>
+            </template>
+
+            <template if:true={timelineItems}>
+                <div class="slds-timeline">
+                    <ul>
+                        <template for:each={timelineItems} for:item="item">
+                            <li key={item.id}>
+                                <div class={item.cssClass}>
+                                    <span class="slds-assistive-text">{item.type}</span>
+                                    <div class="slds-media">
+                                        <div class="slds-media__figure">
+                                            <lightning-icon icon-name={item.icon} size="small"></lightning-icon>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                                                <div
+                                                    class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+                                                    <h3 class="slds-truncate" title={item.title}>
+                                                        <a href="javascript:void(0);" data-id={item.id}
+                                                            onclick={navigateToRecord} class="cursor-pointer">
+                                                            <strong>{item.title}</strong>
+                                                        </a>
+                                                    </h3>
+                                                </div>
+                                                <div class="slds-timeline__actions slds-timeline__actions_inline">
+                                                    <p class="slds-timeline__date">
+                                                        {item.relativeDate}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <p class="slds-m-horizontal_xx-small">
+                                                {item.description}
+                                            </p>
+
+                                            <!-- Conditional Details -->
+                                            <template if:true={item.isMedical}>
+                                                <div
+                                                    class="slds-m-horizontal_xx-small slds-p-top_x-small slds-text-color_weak">
+                                                    <p>Review full history in Medical Records tab.</p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+
+            <template if:false={timelineItems}>
+                <p class="slds-text-align_center">No timeline activity found.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

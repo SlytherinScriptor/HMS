@@ -1,0 +1,49 @@
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Soft modern shadow */
+    border: 1px solid #e5e7eb;
+}
+
+.header-section {
+    background: linear-gradient(135deg, #0b5cab 0%, #009EDB 100%);
+    /* Salesforce Blue Gradient */
+    padding: 1rem 1.5rem;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.header-icon {
+    margin-right: 0.75rem;
+    --slds-c-icon-color-foreground-default: white;
+}
+
+.header-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.form-content {
+    padding: 1.5rem;
+}
+
+.action-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f9fafb;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* Custom Input Styling overrides if needed, relying on SLDS mostly */
+:host {
+    display: block;
+    margin-bottom: 20px;
+}
