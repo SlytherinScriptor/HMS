@@ -40,14 +40,20 @@ public with sharing class INT_ClinicalTriageAgent {
         
         // 1. Validate permissions
         if (!Schema.sObjectType.Appointment__c.isAccessible() || 
-            !Schema.sObjectType.AI_Audit__c.isCreateable()) {
+            !Schema.sObjectType.AI_Audit__c.isCreateable() ||
+            !Schema.sObjectType.Medical_Record__c.isAccessible()) {
             throw new AuraHandledException('Insufficient permissions to invoke AI Agent.');
         }
 
-        Appointment__c appt = [SELECT Id, Notes__c, Specialization__c, Priority__c FROM Appointment__c WHERE Id = :appointmentId LIMIT 1];
+        Appointment__c appt = [SELECT Id, Patient__c, Notes__c, Specialization__c, Priority__c FROM Appointment__c WHERE Id = :appointmentId LIMIT 1];
         
+        List<Medical_Record__c> history = new List<Medical_Record__c>();
+        if (appt.Patient__c != null) {
+            history = [SELECT Id, Diagnosis__c FROM Medical_Record__c WHERE Patient__c = :appt.Patient__c ORDER BY CreatedDate DESC LIMIT 10];
+        }
+
         // 2. Wrap the service call for Agentforce
-        HealthAgentService.ClassificationResult result = HealthAgentService.classifyProblem(symptoms);
+        HealthAgentService.ClassificationResult result = HealthAgentService.classifyProblem(symptoms, history);
         
         Boolean isUrgent = result.urgent;
         Decimal confidence = result.confidence;

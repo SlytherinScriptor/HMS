@@ -8,10 +8,20 @@ public class HMS_DataModelTest {
         Patient__c pat = [SELECT Id FROM Patient__c LIMIT 1];
         Doctor__c doc = [SELECT Id FROM Doctor__c LIMIT 1];
         
+        // Create shifts for the doctor
+        DateTime apptTime = DateTime.now().addDays(1);
+        String dayName = apptTime.format('EEEE');
+        insert new Doctor_Shift__c(
+            Doctor__c = doc.Id,
+            Day_of_Week__c = dayName,
+            Start_Time__c = Time.newInstance(0, 0, 0, 0),
+            End_Time__c = Time.newInstance(23, 59, 0, 0)
+        );
+        
         insert new Appointment__c(
             Patient__c = pat.Id,
             Doctor__c = doc.Id,
-            Date_Time__c = DateTime.now().addDays(1),
+            Date_Time__c = apptTime,
             Status__c = 'Scheduled'
         );
     }

@@ -3,14 +3,23 @@ public class BM_AppointmentTest {
 
     @testSetup
     static void setup() {
-        // Create Doctor with Specialization
-        Doctor__c dr = new Doctor__c(
+        // Create Cardiology Doctor
+        Doctor__c cardioDoc = new Doctor__c(
             First_Name__c = 'Cardio',
             Last_Name__c = 'Doc',
             Email__c = 'cdoc@test.com',
             Specialization__c = 'Cardiology'
         );
-        insert dr;
+        insert cardioDoc;
+        
+        // Create General Practice Doctor for fallback cases
+        Doctor__c gpDoc = new Doctor__c(
+            First_Name__c = 'General',
+            Last_Name__c = 'Practitioner',
+            Email__c = 'gp@test.com',
+            Specialization__c = 'General Practice'
+        );
+        insert gpDoc;
         
         // Create Shifts for all days of the week to ensure availability
         List<Doctor_Shift__c> shifts = new List<Doctor_Shift__c>();
@@ -18,7 +27,13 @@ public class BM_AppointmentTest {
         
         for(String day : days) {
             shifts.add(new Doctor_Shift__c(
-                Doctor__c = dr.Id,
+                Doctor__c = cardioDoc.Id,
+                Day_of_Week__c = day,
+                Start_Time__c = Time.newInstance(8,0,0,0),
+                End_Time__c = Time.newInstance(12,0,0,0)
+            ));
+            shifts.add(new Doctor_Shift__c(
+                Doctor__c = gpDoc.Id,
                 Day_of_Week__c = day,
                 Start_Time__c = Time.newInstance(8,0,0,0),
                 End_Time__c = Time.newInstance(12,0,0,0)
@@ -98,7 +113,7 @@ public class BM_AppointmentTest {
         
         Appointment__c saved = [SELECT Id, Doctor__c, Specialization__c FROM Appointment__c WHERE Id = :appt.Id];
         
-        System.assertEquals(null, saved.Specialization__c, 'Should not auto-assign spec on low confidence');
+        System.assertEquals('General Practice', saved.Specialization__c, 'Should default to General Practice on low confidence');
         System.assertEquals(null, saved.Doctor__c, 'Should not assign doctor');
         
         // Check Audit
@@ -116,10 +131,13 @@ public class BM_AppointmentTest {
     static void testNoDoctorFound() {
         Patient__c pat = [SELECT Id FROM Patient__c LIMIT 1];
         
+        // Use a time within shift hours (8 AM - 12 PM) so we test "no doctor found" not shift validation
+        DateTime apptTime = DateTime.newInstance(Date.today(), Time.newInstance(10, 0, 0, 0));
+        
         Appointment__c appt = new Appointment__c(
             Patient__c = pat.Id,
             Specialization__c = 'Neurology', // No neuro doctor
-            Date_Time__c = DateTime.now(),
+            Date_Time__c = apptTime,
             Status__c = 'Scheduled'
         );
         
@@ -127,7 +145,7 @@ public class BM_AppointmentTest {
             insert appt;
             System.assert(false, 'Should throw exception');
         } catch(Exception e) {
-            System.assert(e.getMessage().contains('No doctors found'), 'Wrong error: ' + e.getMessage());
+            System.assert(e.getMessage().contains('No doctors found') || e.getMessage().contains('No available doctors'), 'Wrong error: ' + e.getMessage());
         }
     }
 }

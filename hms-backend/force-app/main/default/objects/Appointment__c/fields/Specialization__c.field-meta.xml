@@ -25,6 +25,11 @@
                 <label>Orthopedics</label>
             </value>
             <value>
+                <fullName>Pulmonology</fullName>
+                <default>false</default>
+                <label>Pulmonology</label>
+            </value>
+            <value>
                 <fullName>General Practice</fullName>
                 <default>true</default>
                 <label>General Practice</label>

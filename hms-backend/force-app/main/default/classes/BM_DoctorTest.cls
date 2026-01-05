@@ -58,13 +58,23 @@ private class BM_DoctorTest {
         // Delete the doctor created in setup to test error
         delete [SELECT Id FROM Doctor__c];
 
-        Test.startTest();
-        try {
-            BM_Doctor.getMyAppointments();
-            System.assert(false, 'Should have thrown exception');
-        } catch (Exception e) {
-            System.assert(true, 'Exception caught as expected');
+        // Create a Standard User to bypass Admin check
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User']; 
+        User u = new User(Alias = 'standt', Email='standarduser@testorg.com', 
+            EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', 
+            LocaleSidKey='en_US', ProfileId = p.Id, 
+            TimeZoneSidKey='America/Los_Angeles', UserName='standarduser' + DateTime.now().getTime() + '@testorg.com');
+        insert u;
+
+        System.runAs(u) {
+            Test.startTest();
+            try {
+                BM_Doctor.getMyAppointments();
+                System.assert(false, 'Should have thrown exception');
+            } catch (Exception e) {
+                System.assert(true, 'Exception caught as expected');
+            }
+            Test.stopTest();
         }
-        Test.stopTest();
     }
 }

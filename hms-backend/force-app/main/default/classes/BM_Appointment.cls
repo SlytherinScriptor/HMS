@@ -18,31 +18,41 @@ public with sharing class BM_Appointment {
             
             // Check if Doctor is null. Specialization can be null now.
             if(appt.Doctor__c == null) {
-                // Agent Logic
-                HealthAgentService.ClassificationResult result = HealthAgentService.classifyProblem(appt.Notes__c);
+                // If specialization is already set to something OTHER than General Practice (manual assignment), skip AI
+                // General Practice is the default value, so we should still run AI if notes are provided
+                Boolean hasManualSpecialization = (appt.Specialization__c != null && 
+                                                   String.isNotBlank(appt.Specialization__c) && 
+                                                   appt.Specialization__c != 'General Practice');
                 
-                // Store result for logging in After Trigger
-                aiResults.put(i, result);
-                
-                // Apply Trust Layer Logic
-                
-                // 1. Urgency
-                if(result.urgent) {
-                    appt.Priority__c = 'High';
-                }
-                
-                // 2. Confidence Thresholds
-                if(result.confidence >= 0.80) {
-                    // High Confidence: Auto-Assign
-                    if(appt.Specialization__c == null || (appt.Specialization__c == 'General Practice' && result.specialty != 'General Practice')) {
-                        appt.Specialization__c = result.specialty;
-                    }
+                if(hasManualSpecialization) {
+                    // User manually set a specific specialty, skip AI and just assign doctor
                     toAssign.add(appt);
                 } else {
-                    // Low Confidence (< 80%): Do NOT auto-assign. 
-                    // Leave Specialization as is (or null), so no doctor is found/assigned.
-                    // A Task will be created in After Insert (Review Required).
-                    // If user manually set General Practice, we respect it, but we won't overwrite usage of 'result.specialty'.
+                    // Either no specialization set, or it's the default "General Practice"
+                    // Run AI if notes are provided
+                    HealthAgentService.ClassificationResult result = HealthAgentService.classifyProblem(appt.Notes__c);
+                    
+                    // Store result for logging in After Trigger
+                    aiResults.put(i, result);
+                    
+                    // Apply Trust Layer Logic
+                    
+                    // 1. Urgency
+                    if(result.urgent) {
+                        appt.Priority__c = 'High';
+                    }
+                    
+                    // 2. Confidence Thresholds
+                    if(result.confidence >= 0.80) {
+                        // High Confidence: Auto-Assign
+                        // Always set the specialization from AI result if confidence is high
+                        appt.Specialization__c = result.specialty;
+                        toAssign.add(appt);
+                    } else {
+                        // Low Confidence (< 80%): Do NOT auto-assign. 
+                        // Leave Specialization as is (General Practice default or null), so no doctor is assigned.
+                        // A Task will be created in After Insert (Review Required).
+                    }
                 }
             }
         }
@@ -155,7 +165,7 @@ public with sharing class BM_Appointment {
                     t.Description = 'AI Suggested: ' + res.specialty + '\nReason: ' + res.reason + '\nConfidence: ' + (res.confidence*100) + '%';
                     t.Priority = 'Normal';
                     t.Status = 'Not Started';
-                    t.WhatId = appt.Patient__c;
+                    t.WhatId = appt.Id;
                     t.OwnerId = UserInfo.getUserId(); // Assign to current user (Admin/Agent)
                     tasks.add(t);
                 }

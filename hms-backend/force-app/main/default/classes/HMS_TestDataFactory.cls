@@ -47,4 +47,21 @@ public class HMS_TestDataFactory {
         if(doInsert) insert appts;
         return appts;
     }
+
+    public static List<Doctor_Shift__c> createShiftsForDoctor(Id doctorId, Boolean doInsert) {
+        List<Doctor_Shift__c> shifts = new List<Doctor_Shift__c>();
+        String[] daysOfWeek = new String[]{'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'};
+        
+        for(String day : daysOfWeek) {
+            shifts.add(new Doctor_Shift__c(
+                Doctor__c = doctorId,
+                Day_of_Week__c = day,
+                Start_Time__c = Time.newInstance(0, 0, 0, 0),
+                End_Time__c = Time.newInstance(23, 59, 0, 0)
+            ));
+        }
+        
+        if(doInsert) insert shifts;
+        return shifts;
+    }
 }
